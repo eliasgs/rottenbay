@@ -1,9 +1,10 @@
 {
   "name": "rottenbay",
-  "version": "0.0.2",
+  "preferGlobal": "true",
+  "version": "0.0.3",
   "description": "aggregate data from piratebay and rotten tomatoes",
   "bin": {
-    "rottenbay": "rottenbay"
+    "rottenbay": "./rottenbay"
   },
   "main": "rottenbay",
   "dependencies": {
