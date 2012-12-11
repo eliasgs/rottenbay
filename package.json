@@ -1,0 +1,31 @@
+{
+  "name": "rottenbay",
+  "version": "0.0.2",
+  "description": "aggregate data from piratebay and rotten tomatoes",
+  "bin": {
+    "rottenbay": "rottenbay"
+  },
+  "main": "rottenbay",
+  "dependencies": {
+    "request": ">=2.12.0",
+    "cheerio": ">=0.10.3",
+    "multimeter": ">=0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/eliasgs/rottenbay.git"
+  },
+  "keywords": [
+    "movies",
+    "rotten",
+    "tomato",
+    "torrents",
+    "piratebay"
+  ],
+  "author": {
+    "name": "Elias G. Schneevoigt",
+    "email": "elias@supertusch.dk",
+    "url": "http://supertusch.dk"
+  },
+  "readme": "gets top 100 movies from piratebay.se and checks the rating on rootentomato.com"
+}
