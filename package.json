@@ -1,7 +1,7 @@
 {
   "name": "rottenbay",
   "preferGlobal": "true",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "description": "aggregate data from piratebay and rotten tomatoes",
   "bin": {
     "rottenbay": "./rottenbay"
@@ -28,5 +28,5 @@
     "email": "elias@supertusch.dk",
     "url": "http://supertusch.dk"
   },
-  "readme": "gets top 100 movies from piratebay.se and checks the rating on rootentomato.com"
+  "readme": "gets top 100 movies from piratebay.se and checks the rating on rottentomato.com"
 }
