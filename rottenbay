@@ -1,57 +1,25 @@
 #!/usr/bin/env node
-var request = require('request');
-var $ = require('cheerio');
+var rottenbay = require('./lib/rottenbay');
 var multi = require('multimeter')(process);
+var count = 0, total = -1;
 
-var movies = [];
-request('http://thepiratebay.se/top/201', function (err, res, body){
-  if (!err && res.statusCode == 200){
-    var count = 1;
-    var nMovies = 0;
-    multi.drop({before: 'Crunching movies: ['}, function (bar) {
-        var iv = setInterval(function () {
-            bar.percent(count/nMovies*100);
-            if (bar.percent() >= 100) clearInterval(iv);
-        }, 25);
-    });
-    $('.detLink', body).each(function (i, e){
-      var val = $(e).text();
-      if (/.*rip.*/i.test(val)){
-        nMovies++;
-      }
-    });
-    $('.detLink', body).each(function (i, e){
-      var val = $(e).text();
-      var seeds = $(e).parent().parent().next().text();
-      if (/.*rip.*/i.test(val)){
-        val = val
-          .replace(/(dvd|br|bd)rip.*/i, '')
-          .replace(/\d{4}.*/, '')
-          .replace(/[^\w]/g, ' ')
-          .replace(/\s+$/, '');
-        request('http://www.rottentomatoes.com/search/?search='+val.replace(/\s+/g, '+'), function (err, res, body){
-          if (!err && res.statusCode == 200){
-            var rating = '';
-            var tmp = $('#movie_results_ul .tMeterScore', body);
-            if ($(tmp).length > 0){
-              rating = $(tmp).first().text().replace('%', '');  
-            }
-            tmp = $('.fan_side .meter', body);
-            if ($(tmp).length > 0){
-              rating = $(tmp).first().text();
-            }
-            var movie = {seeds: seeds, name: val, rating: rating};
-            movies.push(movie);
-            //process.stdout.write('.');
-            if (count == nMovies){
-              //process.stdout.write('\n');
-              movies.sort(function (a, b){ return b.rating - a.rating; });
-              console.log(movies);
-            }
-            count++;
-          }
-        });
-      }
-    });
-  }
+rottenbay.get(function (movies){
+  console.log('Done:', movies);
+});
+multi.drop({before: 'Crunching movies: ['}, function (bar) {
+  var iv = setInterval(function () {
+    bar.percent(count/total*100);
+    if (bar.percent() >= 100){
+      multi.charm.destroy();
+      clearInterval(iv);
+    }
+  }, 25);
+});
+multi.charm.on('^C', process.exit);
+rottenbay.progress.on('done', function (){ count=1; total=1; });
+rottenbay.progress.on('movie', function (movie){
+  count++;
+});
+rottenbay.progress.on('movieList', function (movieList){
+  total = movieList.length;
 });
